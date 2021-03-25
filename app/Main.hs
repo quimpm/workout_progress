@@ -1,14 +1,25 @@
 module Main(main) where
 
-import Types
+import Data.Time.Clock.POSIX
+import Data.UnixTime
 import System.Environment
+import Types
+import Charts
 import Database
+
 
 rFloat :: String -> Float 
 rFloat = read
 
-getMeasuresOfBodyParts :: IO Body 
+--TODO
+getDate :: IO Float 
+getDate = do
+    time <- getUnixTime 
+    return $ realToFrac $ utSeconds time
+
+getMeasuresOfBodyParts :: IO BodyRegistry 
 getMeasuresOfBodyParts = do
+    currentDate <- getDate 
     putStrLn "Put your current Left Biceps Perimeter:"
     leftBiceps <- getLine
     putStrLn "Put your current Right Biceps Perimeter:"
@@ -35,7 +46,7 @@ getMeasuresOfBodyParts = do
     weight <- getLine
     putStrLn "Put your current Height"
     height <- getLine
-    return Body {
+    return BodyRegistry {
         leftArm = rFloat leftBiceps 
         , rightArm = rFloat rightBiceps 
         , shoulders = rFloat shoulders
@@ -49,6 +60,7 @@ getMeasuresOfBodyParts = do
         , butt = rFloat butt
         , weight = rFloat weight
         , height = rFloat height
+        , date = currentDate
     }
 
 add :: IO()
@@ -58,9 +70,10 @@ add = do
 
 view :: IO()
 view = do
-    putStrLn "Select the chart you want to see by typing one of: <legs, arms, back, shoulders, pectoral, belly, weight, height>"
-    chart <- getLine
-    putStrLn chart
+    putStrLn "Select the chart you want to see by typing one of the body parts: <leftArm, rightArm, shoulders, back, pectoral, leftUpLeg, leftDownLeg, rightUpLeg, rightDownLeg, belly, butt, weight, height>"
+    option <- getLine
+    querySet <- selectToBBDD option
+    printChart option querySet
 
 
 dispatch :: [(String, IO())]
