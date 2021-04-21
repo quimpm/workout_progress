@@ -74,6 +74,7 @@ view = do
     option <- getLine
     querySet <- selectToBBDD option
     printChart option querySet
+    return ()
 
 
 dispatch :: [(String, IO())]

@@ -30,14 +30,14 @@ executable workout-progress
     other-modules: Types
                    Database 
                    Charts
-                   Graphics.Rendering.Chart.Backend.Cairo
 
 
     -- LANGUAGE extensions used by modules in this package.
     -- other-extensions:
     build-depends:    base ^>=4.13.0.0
                       , sqlite-simple ^>=0.4.18.0
-                      , Chart
+                      , easyplot
+                      , old-locale
                       , time ^>=1.9.3
                       , text ^>=1.2.4.0
                       , unix-time ^>= 0.4.7
